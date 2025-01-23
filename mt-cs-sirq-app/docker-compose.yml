@@ -1,0 +1,22 @@
+services:
+  deno:
+    container_name: server
+    image: deno
+    restart: always
+    build:
+      context: mt-cs-brokering-fresh
+      dockerfile: Dockerfile
+      target: base
+    ports:
+      - 8080:8080
+  database:
+    container_name: db
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    env_file:
+      - mt-cs-brokering-fresh/.env
+    volumes:
+      - ${PWD}/db-data/:/var/lib/postgresql/data/
+      - ./sql-init-scripts/init.sh:/docker-entrypoint-initdb.d/init.sh
